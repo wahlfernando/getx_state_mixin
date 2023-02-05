@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_state_mixin/models/cep_model.dart';
-import 'package:get_state_mixin/pages/home_cntroller.dart';
+import 'package:get_state_mixin/pages/home_controller.dart';
 
 class HomePage extends StatelessWidget {
   final controller = Get.find<HomeController>();
@@ -32,27 +32,10 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Obx(
-              () => Visibility(
-                visible: controller.loading,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ),
-            Obx(
-              () => Visibility(
-                visible: controller.isError,
-                child: const Center(
-                  child: Text('Erro ao buscar CEP'),
-                ),
-              ),
-            ),
-            Obx(
-              () => Visibility(
-                visible: !controller.loading && !controller.isError,
-                child: CepWidget(controller.cep),
-              ),
+            controller.obx(
+              (state) => CepWidget(state),
+              onEmpty: const Text('Nenhum CEP encontrado..'),
+              onError: (error) => const Text('erro ao buscar CEP'),
             )
           ],
         ),
